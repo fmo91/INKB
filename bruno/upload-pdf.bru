@@ -1,0 +1,13 @@
+meta {
+  name: "Upload PDF"
+  type: "http"
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/documents
+}
+
+body:multipart-form {
+  file: @file(/path/to/book.pdf)
+}

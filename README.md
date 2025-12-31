@@ -51,6 +51,13 @@ docker compose run --rm backend sh -c "pip install -r requirements-dev.txt && py
 - GitHub Actions runs backend tests on push and PRs targeting `main` using
   Docker Compose.
 
+## API Testing (Bruno)
+
+- Bruno collection lives in `bruno/`.
+- Set `baseUrl` in `bruno/environments/local.bru`.
+- Use the Upload request first and select a PDF file in the request body.
+- Paste the returned IDs into `documentId` and `ingestionId` in the environment.
+
 ## Status
 
 This repo is in early planning with an initial backend scaffold. The API draft

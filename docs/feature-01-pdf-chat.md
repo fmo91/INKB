@@ -56,6 +56,9 @@ locally in Postgres/pgvector.
 3. Create embeddings and index into pgvector.
 4. Mark ingestion as ready.
 
+Note: current extraction reads the full document text into memory; streaming
+chunking will be added when we optimize for very large PDFs.
+
 ## Progress Notifications
 
 - Ingestion status should be pollable via API.
@@ -78,9 +81,10 @@ locally in Postgres/pgvector.
 ## Implementation Plan
 
 - [x] Define database tables for documents and ingestions.
-- [ ] Define tables for chunks, embeddings, and chat.
+- [x] Define tables for chunks.
+- [ ] Define tables for embeddings and chat.
 - [x] Implement PDF upload endpoint (multipart) and local file storage.
-- [x] Add ingestion worker stub to process queued ingestions.
+- [x] Add ingestion worker to extract text and create chunks.
 - [x] Add ingestion status/progress updates with simple polling.
 - [ ] Implement chat endpoint with retrieval + citations.
 - [ ] Build minimal React Native Web UI (upload, progress, chat).

@@ -1,8 +1,19 @@
+from fpdf import FPDF
+
+from app.db import SessionLocal
+from app.models import Chunk
 from app.worker import process_next_ingestion
 
 
 def _sample_pdf() -> bytes:
-    return b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF"
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Helvetica", size=12)
+    pdf.multi_cell(0, 10, "Hello world. " * 20)
+    data = pdf.output()
+    if isinstance(data, str):
+        return data.encode("latin-1")
+    return bytes(data)
 
 
 def test_upload_pdf_creates_document(client) -> None:
@@ -46,3 +57,7 @@ def test_ingestion_queue_and_process(client) -> None:
     body = status.json()
     assert body["status"] == "ready"
     assert body["progress"] == 1.0
+
+    with SessionLocal() as session:
+        chunks = session.query(Chunk).all()
+    assert len(chunks) > 0

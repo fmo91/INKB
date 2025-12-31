@@ -1,10 +1,14 @@
+import os
 import time
 
 from app.db import SessionLocal, init_db
-from app.models import Ingestion
+from app.ingestion import chunk_text, extract_text_from_pdf
+from app.models import Chunk, Document, Ingestion
 
 
 POLL_INTERVAL_SECONDS = 1.0
+CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "1200"))
+CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "200"))
 
 
 def process_next_ingestion() -> bool:
@@ -19,8 +23,38 @@ def process_next_ingestion() -> bool:
             return False
 
         ingestion.status = "running"
-        ingestion.progress = 0.2
+        ingestion.progress = 0.1
         session.commit()
+
+        document = session.get(Document, ingestion.document_id)
+        if document is None:
+            ingestion.status = "failed"
+            ingestion.progress = 0.0
+            session.commit()
+            return True
+
+        try:
+            text = extract_text_from_pdf(document.storage_path)
+        except Exception:
+            ingestion.status = "failed"
+            ingestion.progress = 0.0
+            session.commit()
+            return True
+
+        ingestion.progress = 0.6
+        session.commit()
+
+        session.query(Chunk).filter(Chunk.document_id == document.id).delete()
+        chunks = chunk_text(text, CHUNK_SIZE, CHUNK_OVERLAP)
+        for index, chunk in enumerate(chunks):
+            session.add(
+                Chunk(
+                    document_id=document.id,
+                    ingestion_id=ingestion.id,
+                    index=index,
+                    text=chunk,
+                )
+            )
 
         ingestion.status = "ready"
         ingestion.progress = 1.0

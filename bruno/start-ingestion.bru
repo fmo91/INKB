@@ -1,0 +1,9 @@
+meta {
+  name: Start Ingestion
+  type: "http"
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/documents/{{documentId}}/ingestions
+}
