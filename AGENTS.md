@@ -22,6 +22,14 @@ This file defines how Codex should work in this repo.
 3. Keep changes minimal and aligned with the requested feature.
 4. Report results with what changed, why, tests, risks, and next steps.
 
+## Feature Delivery Loop
+
+- Discuss the feature and implementation approach.
+- Write a spec and plan (with checkboxes).
+- Implement iteratively.
+- Run tests to validate success criteria.
+- Iterate based on feedback.
+
 ## Testing and Quality Gates
 
 - Always run relevant tests.

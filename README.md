@@ -20,6 +20,7 @@ notes, a glossary with citations, and chat-based Q&A over a document.
 ## Docs
 
 - API surface: `docs/api.md`
+- Feature spec: `docs/feature-01-pdf-chat.md`
 - Agent workflow: `AGENTS.md`
 
 ## Status
