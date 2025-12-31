@@ -48,7 +48,8 @@ docker compose run --rm backend sh -c "pip install -r requirements-dev.txt && py
 
 ## CI
 
-- GitHub Actions runs backend tests on push to `main` using Docker Compose.
+- GitHub Actions runs backend tests on push and PRs targeting `main` using
+  Docker Compose.
 
 ## Status
 
