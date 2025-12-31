@@ -43,6 +43,9 @@ Open the web app at:
 http://localhost:19006
 ```
 
+If the web app is blocked by CORS, set `CORS_ALLOWED_ORIGINS` in `.env` to
+include the frontend origin (comma-separated).
+
 To run backend tests in Docker:
 
 ```sh

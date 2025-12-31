@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from app.chat import generate_answer
@@ -12,10 +13,18 @@ from app.schemas import (
     DocumentResponse,
     IngestionResponse,
 )
-from app.settings import CHAT_TOP_K
+from app.settings import CHAT_TOP_K, CORS_ALLOWED_ORIGINS
 from app.storage import ensure_upload_dir, save_upload_file
 
 app = FastAPI(title="INKB API", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ALLOWED_ORIGINS or ["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")
