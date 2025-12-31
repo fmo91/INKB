@@ -53,5 +53,18 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      EXPO_PUBLIC_API_BASE_URL: ${EXPO_PUBLIC_API_BASE_URL:-http://localhost:8000}
+    ports:
+      - "${FRONTEND_PORT:-19006}:19006"
+    volumes:
+      - ./frontend:/app
+    command: npm run web -- --host lan --port 19006
+    depends_on:
+      - backend
+
 volumes:
   db_data:

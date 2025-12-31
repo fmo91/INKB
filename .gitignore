@@ -32,6 +32,8 @@ pnpm-debug.log*
 .cache/
 dist/
 build/
+playwright-report/
+test-results/
 
 # React Native / Expo
 .expo/

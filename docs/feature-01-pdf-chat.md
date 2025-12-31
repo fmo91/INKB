@@ -88,9 +88,9 @@ chunking will be added when we optimize for very large PDFs.
 - [x] Add ingestion worker to extract text and create chunks.
 - [x] Add ingestion status/progress updates with simple polling.
 - [x] Implement chat endpoint with retrieval + citations.
-- [ ] Build minimal React Native Web UI (upload, progress, chat).
+- [x] Build minimal React Native Web UI (upload, progress, chat).
 - [x] Provide Docker compose to run API, worker, and DB in one command.
-- [ ] Add web service to Docker compose.
+- [x] Add web service to Docker compose.
 - [x] Add tests for upload and ingestion.
 - [x] Add tests for chat retrieval.
 - [x] Update docs with any API or UX changes during implementation.

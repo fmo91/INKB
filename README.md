@@ -25,7 +25,7 @@ notes, a glossary with citations, and chat-based Q&A over a document.
 
 ## Development
 
-Backend and Postgres can be started with:
+Backend, worker, Postgres, and the web UI can be started with:
 
 ```sh
 docker compose up --build
@@ -37,13 +37,37 @@ Then hit the health check:
 curl http://localhost:8000/health
 ```
 
-The frontend is not scaffolded yet; this command currently starts the backend
-database and ingestion worker only.
+Open the web app at:
+
+```sh
+http://localhost:19006
+```
 
 To run backend tests in Docker:
 
 ```sh
 docker compose run --rm backend sh -c "pip install -r requirements-dev.txt && pytest"
+```
+
+Frontend (Expo Web) local dev:
+
+```sh
+cd frontend
+npm install
+npm run web
+```
+
+If the API is not on `http://localhost:8000`, set
+`EXPO_PUBLIC_API_BASE_URL` in `frontend/.env` (copy from
+`frontend/.env.example`).
+
+Frontend tests:
+
+```sh
+cd frontend
+npm test
+npx playwright install --with-deps chromium
+npm run test:e2e
 ```
 
 ### Ollama (Local LLM)
@@ -61,8 +85,8 @@ To enable local embeddings + chat via Ollama:
 
 ## CI
 
-- GitHub Actions runs backend tests on push and PRs targeting `main` using
-  Docker Compose.
+- GitHub Actions runs backend tests plus frontend Jest + Playwright on push
+  and PRs targeting `main` using Docker Compose.
 
 ## API Testing (Bruno)
 
