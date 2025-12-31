@@ -79,18 +79,58 @@ chunking will be added when we optimize for very large PDFs.
 - Web UI supports upload, progress, and chat end-to-end.
 - Local Docker-based setup brings up API, worker, DB, and web with one command.
 
-## Implementation Plan
+## Prerequisites (Conceptual)
 
-- [x] Define database tables for documents and ingestions.
-- [x] Define tables for chunks.
-- [x] Define tables for embeddings and chat.
-- [x] Implement PDF upload endpoint (multipart) and local file storage.
-- [x] Add ingestion worker to extract text and create chunks.
-- [x] Add ingestion status/progress updates with simple polling.
-- [x] Implement chat endpoint with retrieval + citations.
-- [x] Build minimal React Native Web UI (upload, progress, chat).
-- [x] Provide Docker compose to run API, worker, and DB in one command.
-- [x] Add web service to Docker compose.
-- [x] Add tests for upload and ingestion.
-- [x] Add tests for chat retrieval.
-- [x] Update docs with any API or UX changes during implementation.
+- Retrieval-Augmented Generation (RAG): fetch relevant chunks and ground the
+  answer in those excerpts.
+- Embeddings + vector search: convert text to vectors and use pgvector to
+  retrieve the nearest chunks by cosine distance.
+- Chunking with overlap: split long documents into stable, queryable pieces.
+- LangChain + Ollama: LangChain orchestrates prompts and the local LLM; Ollama
+  serves the `nomic-embed-text` embeddings and `qwen3:8b` chat model.
+
+## Prerequisites (Runtime)
+
+- Postgres with pgvector enabled (Docker Compose already includes this).
+- A worker process running alongside the API for ingestion.
+- Ollama running locally if you want real answers (otherwise a fallback returns
+  raw excerpts).
+
+## Codebase Flow (Step by Step)
+
+1. **Upload PDF** (`POST /v1/documents`)
+   - `backend/app/main.py` accepts the multipart file.
+   - `backend/app/storage.py` saves it to `backend/data/uploads/`.
+   - A `Document` row is created with filename, MIME type, path, and status.
+
+2. **Start ingestion** (`POST /v1/documents/{id}/ingestions`)
+   - `backend/app/main.py` creates an `Ingestion` row with `queued` status.
+   - This is the job the worker will pick up.
+
+3. **Worker processes ingestion**
+   - `backend/app/worker.py` polls for `queued` ingestions.
+   - It loads the PDF (`backend/app/ingestion.py:extract_text_from_pdf`),
+     chunking the text (`chunk_text`).
+   - Existing chunks/embeddings for that document are cleared (single-document
+     focus for now), then new `Chunk` + `Embedding` rows are written.
+   - Status is set to `ready` with progress updates along the way.
+
+4. **Embeddings**
+   - `backend/app/embedding.py` uses `nomic-embed-text` via Ollama when enabled.
+   - If Ollama is off, it falls back to deterministic hash embeddings so the
+     pipeline still runs (quality is lower, but tests remain deterministic).
+
+5. **Chat request** (`POST /v1/documents/{id}/chat`)
+   - `backend/app/main.py` extracts the last user message.
+   - `backend/app/retrieval.py` embeds the query and uses pgvector cosine
+     distance to fetch top-k chunks.
+   - `backend/app/chat.py` builds the prompt with the retrieved context and
+     sends it to the chat model (or returns excerpts in fallback mode).
+   - `ChatMessage` records are stored and citations are returned in the
+     response.
+
+6. **Frontend flow**
+   - `frontend/App.tsx` uploads the PDF, starts ingestion immediately, and
+     polls `/v1/ingestions/{id}` for progress.
+   - Once ready, it sends messages to `/v1/documents/{id}/chat` and renders the
+     answer with inline citations.

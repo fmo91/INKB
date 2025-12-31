@@ -47,6 +47,7 @@ def embed_text(text: str) -> List[float]:
     # Use Ollama embeddings when enabled, otherwise fall back to a deterministic hash.
     embedder = _ollama_embedder()
     if embedder is None:
+        # Hash embeddings keep test runs deterministic when Ollama is not running.
         return _hash_embed(text, EMBEDDING_DIM)
 
     vector = embedder.embed_query(text)

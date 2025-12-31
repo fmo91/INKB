@@ -35,6 +35,7 @@ def _ollama_llm() -> ChatOllama | None:
 def _format_context(chunks: Iterable[Chunk]) -> str:
     lines = []
     for chunk in chunks:
+        # Include chunk IDs to keep citations stable for downstream use.
         lines.append(f"[{chunk.id}] {chunk.text}")
     return "\n\n".join(lines)
 
@@ -42,7 +43,7 @@ def _format_context(chunks: Iterable[Chunk]) -> str:
 def generate_answer(query: str, chunks: list[Chunk]) -> str:
     llm = _ollama_llm()
     if llm is None:
-        # Fallback for local/dev when Ollama is not configured.
+        # Fallback keeps the API usable when Ollama is off (tests/local dev).
         if not chunks:
             return "No relevant content found in this document yet."
         lines = ["Relevant excerpts:"]

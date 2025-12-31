@@ -42,10 +42,11 @@ def process_next_ingestion() -> bool:
             session.commit()
             return True
 
+        # Progress is coarse-grained (extract -> chunk/embed -> ready).
         ingestion.progress = 0.6
         session.commit()
 
-        # Recompute embeddings on each ingestion for the active document.
+        # Single-document focus: replace previous chunks/embeddings on re-ingest.
         session.query(Embedding).filter(Embedding.document_id == document.id).delete()
         session.query(Chunk).filter(Chunk.document_id == document.id).delete()
         chunks = chunk_text(text, CHUNK_SIZE, CHUNK_OVERLAP)
