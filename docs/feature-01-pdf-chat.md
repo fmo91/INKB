@@ -48,6 +48,7 @@ locally in Postgres/pgvector.
 - Store the raw PDF on local disk (path referenced in Postgres).
 - Store parsed text chunks and embeddings in Postgres + pgvector.
 - Keep ingestion state in a single table for simplicity (queued/running/ready).
+- Use Ollama for local embeddings and chat when enabled.
 
 ## Ingestion Pipeline (Async)
 

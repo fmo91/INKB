@@ -18,8 +18,13 @@ services:
       UPLOAD_DIR: ${UPLOAD_DIR:-/app/data/uploads}
       CHUNK_SIZE: ${CHUNK_SIZE:-1200}
       CHUNK_OVERLAP: ${CHUNK_OVERLAP:-200}
-      EMBEDDING_DIM: ${EMBEDDING_DIM:-384}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-768}
       CHAT_TOP_K: ${CHAT_TOP_K:-5}
+      CHAT_TEMPERATURE: ${CHAT_TEMPERATURE:-0}
+      OLLAMA_ENABLED: ${OLLAMA_ENABLED:-false}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      OLLAMA_EMBED_MODEL: ${OLLAMA_EMBED_MODEL:-nomic-embed-text}
+      OLLAMA_CHAT_MODEL: ${OLLAMA_CHAT_MODEL:-qwen3:8b}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
@@ -37,7 +42,10 @@ services:
       UPLOAD_DIR: ${UPLOAD_DIR:-/app/data/uploads}
       CHUNK_SIZE: ${CHUNK_SIZE:-1200}
       CHUNK_OVERLAP: ${CHUNK_OVERLAP:-200}
-      EMBEDDING_DIM: ${EMBEDDING_DIM:-384}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-768}
+      OLLAMA_ENABLED: ${OLLAMA_ENABLED:-false}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      OLLAMA_EMBED_MODEL: ${OLLAMA_EMBED_MODEL:-nomic-embed-text}
     volumes:
       - ./backend:/app
       - ./backend/data:/app/data

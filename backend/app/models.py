@@ -1,11 +1,10 @@
-import os
 import uuid
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
 from pgvector.sqlalchemy import Vector
 
-EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "384"))
+from app.settings import EMBEDDING_DIM
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -101,6 +100,7 @@ class Embedding(Base):
         ForeignKey("chunks.id"),
         nullable=False,
     )
+    # Vector length is fixed by EMBEDDING_DIM; DB schema must match.
     vector: Mapped[list[float]] = mapped_column(Vector(EMBEDDING_DIM), nullable=False)
     model: Mapped[str] = mapped_column(String(64), default="hash-embed-v1")
     created_at: Mapped[datetime] = mapped_column(

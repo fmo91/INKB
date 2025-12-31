@@ -12,12 +12,13 @@ def retrieve_top_chunks(
     document_id: str,
     query: str,
     top_k: int,
-    dimension: int,
 ) -> List[Chunk]:
     if top_k <= 0:
         return []
 
-    query_vector = embed_text(query, dimension)
+    # pgvector cosine distance provides approximate relevance ordering.
+    # See https://www.pinecone.io/learn/vector-search-basics/ for a quick intro.
+    query_vector = embed_text(query)
     stmt = (
         select(Chunk)
         .join(Embedding, Embedding.chunk_id == Chunk.id)

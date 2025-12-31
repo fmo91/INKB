@@ -46,6 +46,19 @@ To run backend tests in Docker:
 docker compose run --rm backend sh -c "pip install -r requirements-dev.txt && pytest"
 ```
 
+### Ollama (Local LLM)
+
+To enable local embeddings + chat via Ollama:
+
+- Set `OLLAMA_ENABLED=true` and `OLLAMA_BASE_URL` in `.env`.
+- Ensure models are available locally:
+  - `ollama pull nomic-embed-text`
+  - `ollama pull qwen3:8b`
+- `EMBEDDING_DIM` defaults to `768` for `nomic-embed-text`.
+- Re-ingest documents if you change embedding models or dimensions.
+- If the database was created with a different `EMBEDDING_DIM`, reset the DB
+  (or drop the `embeddings` table) before re-ingesting.
+
 ## CI
 
 - GitHub Actions runs backend tests on push and PRs targeting `main` using

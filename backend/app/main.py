@@ -1,10 +1,9 @@
-import os
-
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
+from app.chat import generate_answer
 from app.db import get_session, init_db
-from app.models import ChatMessage, Document, Ingestion, EMBEDDING_DIM
+from app.models import ChatMessage, Document, Ingestion
 from app.retrieval import retrieve_top_chunks
 from app.schemas import (
     ChatRequest,
@@ -13,10 +12,10 @@ from app.schemas import (
     DocumentResponse,
     IngestionResponse,
 )
+from app.settings import CHAT_TOP_K
 from app.storage import ensure_upload_dir, save_upload_file
 
 app = FastAPI(title="INKB API", version="0.1.0")
-DEFAULT_TOP_K = int(os.getenv("CHAT_TOP_K", "5"))
 
 
 @app.on_event("startup")
@@ -112,25 +111,17 @@ def chat_with_document(
     if not query:
         raise HTTPException(status_code=400, detail="User message is required.")
 
-    top_k = payload.top_k or DEFAULT_TOP_K
+    # Retrieve relevant chunks, then answer with an LLM (or a fallback).
+    top_k = payload.top_k or CHAT_TOP_K
     chunks = retrieve_top_chunks(
         session,
         document_id=document_id,
         query=query,
         top_k=top_k,
-        dimension=EMBEDDING_DIM,
     )
 
-    citations: list[Citation] = []
-    for chunk in chunks:
-        citations.append(Citation(chunk_id=chunk.id, quote=chunk.text[:400]))
-
-    if citations:
-        answer_lines = ["Relevant excerpts:"]
-        answer_lines.extend(f"- {cite.quote}" for cite in citations)
-        answer = "\n".join(answer_lines)
-    else:
-        answer = "No relevant content found in this document yet."
+    citations = [Citation(chunk_id=chunk.id, quote=chunk.text[:400]) for chunk in chunks]
+    answer = generate_answer(query, chunks)
 
     for message in payload.messages:
         session.add(

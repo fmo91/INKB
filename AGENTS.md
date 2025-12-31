@@ -14,6 +14,7 @@ This file defines how Codex should work in this repo.
 - Update docs on every change to keep context fresh for humans and agents.
 - Prefer small, reviewable diffs; avoid speculative refactors.
 - Ask clarifying questions when requirements are ambiguous.
+- Add comments to all code that is exported from a module or file.
 
 ## Workflow
 
