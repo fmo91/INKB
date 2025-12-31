@@ -46,6 +46,10 @@ To run backend tests in Docker:
 docker compose run --rm backend sh -c "pip install -r requirements-dev.txt && pytest"
 ```
 
+## CI
+
+- GitHub Actions runs backend tests on push to `main` using Docker Compose.
+
 ## Status
 
 This repo is in early planning with an initial backend scaffold. The API draft
