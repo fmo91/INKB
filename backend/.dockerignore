@@ -9,4 +9,5 @@ venv/
 ENV/
 env/
 tests/
+data/
 *.log

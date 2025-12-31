@@ -46,6 +46,9 @@ android/local.properties
 # Logs
 *.log
 
+# Local uploads
+backend/data/
+
 # OS / Editor
 .DS_Store
 .idea/

@@ -38,7 +38,7 @@ curl http://localhost:8000/health
 ```
 
 The frontend is not scaffolded yet; this command currently starts the backend
-and database only.
+database and ingestion worker only.
 
 To run backend tests in Docker:
 

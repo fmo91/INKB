@@ -77,12 +77,15 @@ locally in Postgres/pgvector.
 
 ## Implementation Plan
 
-- [ ] Define database tables for documents, ingestions, chunks, embeddings, and chat.
-- [ ] Implement PDF upload endpoint (multipart) and local file storage.
-- [ ] Add ingestion worker to extract text, chunk, embed, and store results.
-- [ ] Add ingestion status/progress updates with simple polling.
+- [x] Define database tables for documents and ingestions.
+- [ ] Define tables for chunks, embeddings, and chat.
+- [x] Implement PDF upload endpoint (multipart) and local file storage.
+- [x] Add ingestion worker stub to process queued ingestions.
+- [x] Add ingestion status/progress updates with simple polling.
 - [ ] Implement chat endpoint with retrieval + citations.
 - [ ] Build minimal React Native Web UI (upload, progress, chat).
-- [ ] Provide Docker compose to run API, worker, DB, and web in one command.
-- [ ] Add tests for upload, ingestion, and chat retrieval.
-- [ ] Update docs with any API or UX changes during implementation.
+- [x] Provide Docker compose to run API, worker, and DB in one command.
+- [ ] Add web service to Docker compose.
+- [x] Add tests for upload and ingestion.
+- [ ] Add tests for chat retrieval.
+- [x] Update docs with any API or UX changes during implementation.

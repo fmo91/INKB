@@ -25,7 +25,7 @@ included as stubs for the next phase.
 ## Documents
 
 - POST /v1/documents
-  - Create a document from raw text, URL, or upload.
+  - Create a document from a PDF file upload (multipart/form-data).
 - GET /v1/documents
   - List documents.
 - GET /v1/documents/{id}
@@ -78,22 +78,19 @@ included as stubs for the next phase.
 
 POST /v1/documents
 
-```json
-{
-  "title": "Designing Data-Intensive Applications",
-  "source_type": "raw_text",
-  "raw_text": "..."
-}
-```
+Request (multipart/form-data)
+
+- file: PDF file
 
 Response
 
 ```json
 {
   "id": "doc_123",
-  "title": "Designing Data-Intensive Applications",
-  "source_type": "raw_text",
-  "status": "ready",
+  "original_filename": "book.pdf",
+  "content_type": "application/pdf",
+  "byte_size": 123456,
+  "status": "uploaded",
   "created_at": "2025-01-01T12:00:00Z"
 }
 ```
