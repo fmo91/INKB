@@ -57,6 +57,7 @@ docker compose run --rm backend sh -c "pip install -r requirements-dev.txt && py
 - Set `baseUrl` in `bruno/environments/local.bru`.
 - Use the Upload request first and select a PDF file in the request body.
 - Paste the returned IDs into `documentId` and `ingestionId` in the environment.
+- Use the Chat request after ingestion is ready to validate retrieval output.
 
 ## Status
 

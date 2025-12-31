@@ -1,7 +1,11 @@
+import os
 import uuid
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
+from pgvector.sqlalchemy import Vector
+
+EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "384"))
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -74,6 +78,52 @@ class Chunk(Base):
     )
     index: Mapped[int] = mapped_column(Integer, nullable=False)
     text: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+
+
+class Embedding(Base):
+    __tablename__ = "embeddings"
+
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+    )
+    document_id: Mapped[str] = mapped_column(
+        ForeignKey("documents.id"),
+        nullable=False,
+    )
+    chunk_id: Mapped[str] = mapped_column(
+        ForeignKey("chunks.id"),
+        nullable=False,
+    )
+    vector: Mapped[list[float]] = mapped_column(Vector(EMBEDDING_DIM), nullable=False)
+    model: Mapped[str] = mapped_column(String(64), default="hash-embed-v1")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+
+
+class ChatMessage(Base):
+    __tablename__ = "chat_messages"
+
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+    )
+    document_id: Mapped[str] = mapped_column(
+        ForeignKey("documents.id"),
+        nullable=False,
+    )
+    role: Mapped[str] = mapped_column(String(16), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,

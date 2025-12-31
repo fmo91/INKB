@@ -2,8 +2,9 @@ import os
 import time
 
 from app.db import SessionLocal, init_db
+from app.embedding import embed_text
 from app.ingestion import chunk_text, extract_text_from_pdf
-from app.models import Chunk, Document, Ingestion
+from app.models import Chunk, Document, Embedding, Ingestion, EMBEDDING_DIM
 
 
 POLL_INTERVAL_SECONDS = 1.0
@@ -44,15 +45,23 @@ def process_next_ingestion() -> bool:
         ingestion.progress = 0.6
         session.commit()
 
+        session.query(Embedding).filter(Embedding.document_id == document.id).delete()
         session.query(Chunk).filter(Chunk.document_id == document.id).delete()
         chunks = chunk_text(text, CHUNK_SIZE, CHUNK_OVERLAP)
         for index, chunk in enumerate(chunks):
+            chunk_record = Chunk(
+                document_id=document.id,
+                ingestion_id=ingestion.id,
+                index=index,
+                text=chunk,
+            )
+            session.add(chunk_record)
+            session.flush()
             session.add(
-                Chunk(
+                Embedding(
                     document_id=document.id,
-                    ingestion_id=ingestion.id,
-                    index=index,
-                    text=chunk,
+                    chunk_id=chunk_record.id,
+                    vector=embed_text(chunk, EMBEDDING_DIM),
                 )
             )
 

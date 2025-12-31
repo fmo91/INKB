@@ -23,3 +23,24 @@ class IngestionResponse(BaseModel):
     progress: float
     created_at: datetime
     updated_at: datetime
+
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+    top_k: int = 5
+    include_citations: bool = True
+
+
+class Citation(BaseModel):
+    chunk_id: str
+    quote: str
+
+
+class ChatResponse(BaseModel):
+    answer: str
+    citations: list[Citation]

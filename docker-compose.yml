@@ -18,6 +18,8 @@ services:
       UPLOAD_DIR: ${UPLOAD_DIR:-/app/data/uploads}
       CHUNK_SIZE: ${CHUNK_SIZE:-1200}
       CHUNK_OVERLAP: ${CHUNK_OVERLAP:-200}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-384}
+      CHAT_TOP_K: ${CHAT_TOP_K:-5}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
@@ -35,6 +37,7 @@ services:
       UPLOAD_DIR: ${UPLOAD_DIR:-/app/data/uploads}
       CHUNK_SIZE: ${CHUNK_SIZE:-1200}
       CHUNK_OVERLAP: ${CHUNK_OVERLAP:-200}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-384}
     volumes:
       - ./backend:/app
       - ./backend/data:/app/data

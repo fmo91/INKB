@@ -140,16 +140,11 @@ Response
 
 ```json
 {
-  "answer": "Eventual consistency means ...",
+  "answer": "Relevant excerpts:\n- ...",
   "citations": [
     {
       "chunk_id": "chk_789",
-      "section_id": "sec_12",
-      "quote": "...",
-      "offsets": {
-        "start": 120,
-        "end": 214
-      }
+      "quote": "..."
     }
   ]
 }

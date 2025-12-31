@@ -1,13 +1,15 @@
 meta {
   name: "Upload PDF"
-  type: "http"
+  type: http
   seq: 1
 }
 
 post {
   url: {{baseUrl}}/v1/documents
+  body: multipartForm
+  auth: none
 }
 
 body:multipart-form {
-  file: @file(/path/to/book.pdf)
+  file: @file(/Users/fernandomartinortiz/Documents/books/context-changes-everything.pdf)
 }

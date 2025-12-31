@@ -1,7 +1,7 @@
 from fpdf import FPDF
 
 from app.db import SessionLocal
-from app.models import Chunk
+from app.models import Chunk, Embedding
 from app.worker import process_next_ingestion
 
 
@@ -60,4 +60,6 @@ def test_ingestion_queue_and_process(client) -> None:
 
     with SessionLocal() as session:
         chunks = session.query(Chunk).all()
+        embeddings = session.query(Embedding).all()
     assert len(chunks) > 0
+    assert len(embeddings) == len(chunks)

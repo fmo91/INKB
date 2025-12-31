@@ -82,14 +82,14 @@ chunking will be added when we optimize for very large PDFs.
 
 - [x] Define database tables for documents and ingestions.
 - [x] Define tables for chunks.
-- [ ] Define tables for embeddings and chat.
+- [x] Define tables for embeddings and chat.
 - [x] Implement PDF upload endpoint (multipart) and local file storage.
 - [x] Add ingestion worker to extract text and create chunks.
 - [x] Add ingestion status/progress updates with simple polling.
-- [ ] Implement chat endpoint with retrieval + citations.
+- [x] Implement chat endpoint with retrieval + citations.
 - [ ] Build minimal React Native Web UI (upload, progress, chat).
 - [x] Provide Docker compose to run API, worker, and DB in one command.
 - [ ] Add web service to Docker compose.
 - [x] Add tests for upload and ingestion.
-- [ ] Add tests for chat retrieval.
+- [x] Add tests for chat retrieval.
 - [x] Update docs with any API or UX changes during implementation.

@@ -1,0 +1,20 @@
+meta {
+  name: "Chat Document"
+  type: "http"
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v1/documents/{{documentId}}/chat
+}
+
+body:json {
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is this document about?"
+    }
+  ],
+  "top_k": 3,
+  "include_citations": true
+}
